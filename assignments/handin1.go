@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+// This is the 1st version of handin1 - don't use it
+
 func main() {
 	fmt.Println("starting main")
 	forks := make([]fork, 0)

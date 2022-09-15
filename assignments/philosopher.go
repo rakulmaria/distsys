@@ -5,6 +5,8 @@ import (
 	// "time"
 )
 
+// This is the new version of handin1 - use this one
+
 func eat(p philosopher) {
 	p.left.fromLeftPhil <- p.name + ": I'm hungry, let me grab my left fork"
 	<-p.left.toLeftPhil
