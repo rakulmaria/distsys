@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// This is the new version of handin1 - use this one
+// Works 9/10 times but deadlocks sometime. No idea why
 
 func eat(p philosopher) {
 	for p.counter < 3 {
@@ -14,7 +14,7 @@ func eat(p philosopher) {
 
 		p.toRightFork <- p.name + ": I'm hungry, let me grab my right fork"
 		<-p.right.toRightPhil
-		fmt.Println(p.name, " is eating")
+		fmt.Println(p.name, " is eating.. nom nom...")
 
 		p.toLeftFork <- "I'm done"
 		p.toRightFork <- "I'm done"
@@ -22,8 +22,8 @@ func eat(p philosopher) {
 		p.counter++
 		// fmt.Println(p.name, p.counter)
 
-		fmt.Println(p.name, " is thinking")
-		time.Sleep(time.Duration(5 * time.Second))
+		fmt.Println(p.name, " is thinking.. hmmm...")
+		time.Sleep(time.Duration(3 * time.Second))
 	}
 	fmt.Println(p.name, "is saying: \"I'm done eating and I'm really full.\"")
 }
@@ -50,8 +50,7 @@ func checkFork(f fork) {
 
 func infiniteTime() {
 	for {
-		var i int = 0
-		i++
+
 	}
 }
 
