@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"time"
-	// "time"
 )
 
 // This is the new version of handin1 - use this one
 
 func eat(p philosopher) {
-	for {
+	for p.counter < 3 {
 		p.toLeftFork <- p.name + ": I'm hungry, let me grab my left fork"
 		<-p.left.toLeftPhil
 
@@ -21,25 +20,25 @@ func eat(p philosopher) {
 		p.toRightFork <- "I'm done"
 
 		p.counter++
-		fmt.Println(p.name, p.counter)
+		// fmt.Println(p.name, p.counter)
 
 		fmt.Println(p.name, " is thinking")
 		time.Sleep(time.Duration(5 * time.Second))
 	}
-
+	fmt.Println(p.name, "is saying: \"I'm done eating and I'm really full.\"")
 }
 
 func checkFork(f fork) {
 	for {
 		select {
-		case msgLeft := <-f.leftPhil[0].toLeftFork:
-			fmt.Println(msgLeft)
+		case <-f.leftPhil[0].toLeftFork:
+			// fmt.Println(msgLeft)
 			f.toLeftPhil <- "Take me now!"
 
 			<-f.leftPhil[0].toLeftFork
 			// <-f.rightPhil[0].toRightFork
-		case msgRight := <-f.rightPhil[0].toRightFork:
-			fmt.Println(msgRight)
+		case <-f.rightPhil[0].toRightFork:
+			// fmt.Println(msgRight)
 			f.toRightPhil <- "Take me now!"
 
 			<-f.rightPhil[0].toRightFork
