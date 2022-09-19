@@ -2,28 +2,39 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
-
-// Works 9/10 times but deadlocks sometime. No idea why
 
 func eat(p philosopher) {
 	for p.counter < 3 {
-		p.toLeftFork <- p.name + ": I'm hungry, let me grab my left fork"
-		<-p.left.toLeftPhil
+		/* This is the if-statement we have to ensure no deadlock.
+		By switching the order that two (or even one)
+		philosophers grab the forks, we ensure that it
+		won't deadlock since the philosophers will
+		switch grabbing a right / left fork */
+		if p.name == "Philosopher0" || p.name == "Philosopher2" {
+			p.toLeftFork <- p.name + ": I'm hungry, let me grab my left fork"
+			<-p.left.toLeftPhil
 
-		p.toRightFork <- p.name + ": I'm hungry, let me grab my right fork"
-		<-p.right.toRightPhil
+			p.toRightFork <- p.name + ": I'm hungry, let me grab my right fork"
+			<-p.right.toRightPhil
+		} else {
+			p.toRightFork <- p.name + ": I'm hungry, let me grab my right fork"
+			<-p.right.toRightPhil
+
+			p.toLeftFork <- p.name + ": I'm hungry, let me grab my left fork"
+			<-p.left.toLeftPhil
+		}
+
 		fmt.Println(p.name, " is eating.. nom nom...")
+		// time.Sleep(time.Duration(3 * time.Second)) <--- uncomment this line for more realistic eating
 
 		p.toLeftFork <- "I'm done"
 		p.toRightFork <- "I'm done"
 
 		p.counter++
-		// fmt.Println(p.name, p.counter)
 
 		fmt.Println(p.name, " is thinking.. hmmm...")
-		time.Sleep(time.Duration(3 * time.Second))
+		//time.Sleep(time.Duration(3 * time.Second)) <--- uncomment this line for more realistic thinking
 	}
 	fmt.Println(p.name, "is saying: \"I'm done eating and I'm really full.\"")
 }
